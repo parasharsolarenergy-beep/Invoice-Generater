@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Material Invoice</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="invoice-header">
+    <img src="logo.png">
+    <div class="company-info">
+      <h2>D.A.V. Trading Co.</h2>
+      <p><i>Co-partner with Parashar Solar Energy</i></p>
+      <p>Address: _______________________</p>
+      <p>Phone: _______________________</p>
+      <p>GST No: _______________________</p>
+    </div>
+  </div>
+
+  <div class="title">Material Invoice</div>
+
+  <!-- CUSTOMER DETAILS -->
+  <div class="details">
+    <p>Customer Name: <input type="text"></p>
+    <p>Address: <input type="text"></p>
+    <p>Invoice No: <input type="text"></p>
+    <p>Date: <input type="date"></p>
+  </div>
+
+  <!-- ITEMS -->
+  <div id="items"></div>
+
+  <button onclick="addItem()">+ Add Item</button>
+
+  <!-- PRINT TABLE -->
+  <table id="printTable">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Weight (kg)</th>
+        <th>Qty</th>
+        <th>Total Weight</th>
+        <th>Rate</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <!-- TOTAL -->
+  <div class="total-box">
+    <p>Total: ₹ <span id="total">0.00</span></p>
+    <p>GST (18%): ₹ <span id="gst">0.00</span></p>
+    <h3>Grand Total: ₹ <span id="grandTotal">0.00</span></h3>
+  </div>
+
+  <button onclick="printInvoice()">Print Invoice</button>
+
+</div>
+
+<script>
+
+// ITEMS
+const items = {
+  "PURLIN": 13,
+  "RAFTAR": 17.5,
+  "BASE PLATE": "",
+  "JOINTER SMALL": "",
+  "JOINTER BIG": "",
+  "EARTING ROD 1MTR 14MM": "",
+  "EARTING ROD 2MTR 14MM": "",
+  "EARTING ROD 3MTR 14MM": "",
+  "LIGHTING ADESTER 16MM": "",
+  "MID CLAMP": "",
+  "END CLAMP": "",
+  "BOLT": "",
+  "FATNE": ""
+};
+
+// ADD ITEM
+function addItem() {
+  let div = document.createElement("div");
+  div.className = "card";
+
+  div.innerHTML = `
+    <select onchange="setWeight(this)">
+      <option value="">Select Item</option>
+      ${Object.keys(items).map(i => `<option>${i}</option>`).join("")}
+    </select>
+
+    <div class="row">
+      <input type="text" class="weight" placeholder="Weight">
+      <input type="number" class="qty" placeholder="Qty" oninput="calculate(this)">
+    </div>
+
+    <div class="row">
+      <input type="text" class="totalWeight" placeholder="Total Weight" readonly>
+      <input type="number" class="rate" placeholder="Rate" oninput="calculate(this)">
+    </div>
+
+    <input type="text" class="amount" placeholder="Amount" readonly>
+  `;
+
+  document.getElementById("items").appendChild(div);
+}
+
+// SET WEIGHT
+function setWeight(select) {
+  let card = select.parentElement;
+  let value = items[select.value];
+  let weightInput = card.querySelector(".weight");
+
+  if (value !== "") {
+    weightInput.value = value + " kg";
+    weightInput.readOnly = true;
+  } else {
+    weightInput.value = "";
+    weightInput.readOnly = false;
+  }
+}
+
+// CALCULATE
+function calculate(input) {
+  let card = input.closest(".card");
+
+  let weight = parseFloat(card.querySelector(".weight").value) || 0;
+  let qty = parseFloat(card.querySelector(".qty").value) || 0;
+  let rate = parseFloat(card.querySelector(".rate").value) || 0;
+
+  let totalWeight = weight * qty;
+  let amount = totalWeight * rate;
+
+  card.querySelector(".totalWeight").value = totalWeight.toFixed(3) + " kg";
+  card.querySelector(".amount").value = "₹ " + amount.toFixed(2);
+
+  calculateTotal();
+}
+
+// TOTAL
+function calculateTotal() {
+  let amounts = document.querySelectorAll(".amount");
+
+  let total = 0;
+
+  amounts.forEach(a => {
+    let val = parseFloat(a.value.replace("₹", "")) || 0;
+    total += val;
+  });
+
+  let gst = total * 0.18;
+  let grand = total + gst;
+
+  document.getElementById("total").innerText = total.toFixed(2);
+  document.getElementById("gst").innerText = gst.toFixed(2);
+  document.getElementById("grandTotal").innerText = grand.toFixed(2);
+}
+
+// GENERATE PRINT TABLE
+function generatePrintTable() {
+  let tbody = document.querySelector("#printTable tbody");
+  tbody.innerHTML = "";
+
+  let cards = document.querySelectorAll(".card");
+
+  cards.forEach(card => {
+    let item = card.querySelector("select").value;
+    let weight = card.querySelector(".weight").value;
+    let qty = card.querySelector(".qty").value;
+    let totalWeight = card.querySelector(".totalWeight").value;
+    let rate = card.querySelector(".rate").value;
+    let amount = card.querySelector(".amount").value;
+
+    if (item) {
+      let tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>${item}</td>
+        <td>${weight}</td>
+        <td>${qty}</td>
+        <td>${totalWeight}</td>
+        <td>₹ ${rate}</td>
+        <td>${amount}</td>
+      `;
+
+      tbody.appendChild(tr);
+    }
+  });
+}
+
+// PRINT FUNCTION
+function printInvoice() {
+  generatePrintTable();
+  window.print();
+}
+
+// DEFAULT
+addItem();
+
+</script>
+
+</body>
+</html>

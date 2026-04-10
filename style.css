@@ -1,0 +1,173 @@
+/* RESET */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f7fa;
+}
+
+/* MAIN CONTAINER */
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  background: #ffffff;
+}
+
+/* HEADER */
+.invoice-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-bottom: 2px solid #000;
+  padding-bottom: 10px;
+}
+
+.invoice-header img {
+  width: 80px;
+  height: auto;
+}
+
+.company-info h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.company-info p {
+  margin: 2px 0;
+  font-size: 13px;
+}
+
+/* TITLE */
+.title {
+  text-align: center;
+  margin: 15px 0;
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* CUSTOMER DETAILS */
+.details p {
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.details input {
+  border: none;
+  border-bottom: 1px solid #000;
+  width: 60%;
+  padding: 4px;
+  outline: none;
+}
+
+/* ITEM CARD */
+.card {
+  border: 1px solid #ccc;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+input, select {
+  padding: 6px;
+  width: 100%;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+/* TOTAL BOX */
+.total-box {
+  border: 2px solid #000;
+  padding: 15px;
+  margin-top: 20px;
+  background: #fafafa;
+}
+
+.total-box p {
+  margin: 5px 0;
+  font-size: 15px;
+}
+
+.total-box h3 {
+  margin-top: 10px;
+}
+
+/* BUTTON */
+button {
+  margin-top: 12px;
+  padding: 10px;
+  width: 100%;
+  cursor: pointer;
+  border: none;
+  background: #2c3e50;
+  color: #fff;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+button:hover {
+  background: #1a252f;
+}
+
+/* PRINT TABLE */
+#printTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  display: none;
+}
+
+#printTable th,
+#printTable td {
+  border: 1px solid #000;
+  padding: 8px;
+  text-align: center;
+  font-size: 12px;
+}
+
+#printTable th {
+  background: #f0f0f0;
+  font-weight: bold;
+}
+
+/* PRINT MODE */
+@media print {
+
+  body {
+    background: #ffffff;
+  }
+
+  button {
+    display: none;
+  }
+
+  input, select {
+    border: none;
+  }
+
+  /* Hide editable cards */
+  #items {
+    display: none;
+  }
+
+  .card {
+    display: none;
+  }
+
+  /* Show clean table */
+  #printTable {
+    display: table;
+  }
+
+  .container {
+    box-shadow: none;
+    padding: 0;
+  }
+}
